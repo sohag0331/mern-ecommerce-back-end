@@ -5,19 +5,23 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
 
-const authRoutes = require("./routes/admin/auth");
-const adminRoutes = require("./routes/auth");
+//routes
+const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin/auth");
 const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/product");
 const cartRoutes = require("./routes/cart");
 const initialDataRoutes = require("./routes/admin/initialData");
 const pageRoutes = require("./routes/admin/page");
 const addressRoutes = require("./routes/address");
+const orderRoutes = require("./routes/order");
+const adminOrderRoute = require("./routes/admin/order.routes");
 
+//environment variable or you can say constants
 env.config();
 
-// mongodb+srv://admin:<password>@cluster0.wu909.mongodb.net/<dbname>?retryWrites=true&w=majority
-
+// mongodb connection
+//mongodb+srv://root:<password>@cluster0.8pl1w.mongodb.net/<dbname>?retryWrites=true&w=majority
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.wu909.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`,
@@ -29,18 +33,10 @@ mongoose
     }
   )
   .then(() => {
-    console.log("Database Connected !!");
+    console.log("Database connected");
   });
 
-//var cors = require('cors');
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-app.use(express.json());
-
-//app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api", authRoutes);
@@ -51,6 +47,8 @@ app.use("/api", cartRoutes);
 app.use("/api", initialDataRoutes);
 app.use("/api", pageRoutes);
 app.use("/api", addressRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", adminOrderRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
